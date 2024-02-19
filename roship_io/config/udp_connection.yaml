@@ -1,0 +1,9 @@
+/**:
+  ros__parameters:
+    rx:
+      buffer_size: 1024
+      port: 1234
+    tx:
+      host: 127.0.0.1
+      port: 4321
+

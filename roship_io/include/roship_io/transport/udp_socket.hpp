@@ -19,8 +19,6 @@
 
 TRANSPORT_NS_HEAD
 
-//using MessageCallback = std::function<void(const std::vector<byte>&)>;
-
 class UdpSocket : public TransportInterface {
  public:
   UdpSocket(int port, size_t buffer_size = 1024);

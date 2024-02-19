@@ -5,9 +5,6 @@
 
 #include <functional>
 
-
-
-
 TRANSPORT_NS_HEAD
 
 using MessageCallback = std::function<void(const std::vector<byte>&)>;
