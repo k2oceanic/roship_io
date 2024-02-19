@@ -4,6 +4,7 @@ on:
     branches:
       - master
       - main
+      - devel
       
   workflow_dispatch:
 
