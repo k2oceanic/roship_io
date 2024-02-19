@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 
-project(template_pkg_interfaces)
+project(io_interfaces)
 
 find_package(ament_cmake REQUIRED)
 find_package(rosidl_default_generators REQUIRED)

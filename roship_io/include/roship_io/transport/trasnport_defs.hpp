@@ -5,10 +5,10 @@
 ///  Namespace stuff
 ///
 
-#define SECTIONS_NS_HEAD  \
-  NS_HEAD namespace sections {
+#define TRANSPORT_NS_HEAD  \
+  NS_HEAD namespace trasnport {
 
-#define SECTIONS_NS_FOOT  \
+#define TRANSPORT_NS_FOOT  \
   NS_FOOT }
 
 
