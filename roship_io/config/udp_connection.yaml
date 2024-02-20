@@ -1,9 +1,10 @@
 /**:
   ros__parameters:
-    rx:
+    sock:
       buffer_size: 1024
+      dst_hosts:
+      - 127.0.0.1
+      dst_ports:
+      - 4321
       port: 1234
-    tx:
-      host: 127.0.0.1
-      port: 4321
 

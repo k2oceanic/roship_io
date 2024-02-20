@@ -2,7 +2,10 @@
 
 TRANSPORT_NS_HEAD
 
-UdpSocket::UdpSocket(int port, size_t buffer_size) : port_(port), buffer_size_(buffer_size) {
+UdpSocket::UdpSocket(Params params) :
+  buffer_size_(params.buffer_size)
+{
+  params_ = params;
     sockfd_ = socket(AF_INET, SOCK_DGRAM, 0);
     if (sockfd_ < 0) {
         throw std::runtime_error("Error opening socket");
@@ -21,11 +24,11 @@ UdpSocket::UdpSocket(int port, size_t buffer_size) : port_(port), buffer_size_(b
     memset(&addr_, 0, sizeof(addr_));
     addr_.sin_family = AF_INET;
     addr_.sin_addr.s_addr = INADDR_ANY;
-    addr_.sin_port = htons(port_);
+    addr_.sin_port = htons(params.port);
 
     if (bind(sockfd_, reinterpret_cast<struct sockaddr*>(&addr_), sizeof(addr_)) < 0) {
         std::ostringstream msg;
-        msg << "Error binding socket to port " << port_ << ": " << strerror(errno);
+        msg << "Error binding socket to port " << params.port << ": " << strerror(errno);
         throw std::runtime_error(msg.str());
     }
 
@@ -34,10 +37,19 @@ UdpSocket::UdpSocket(int port, size_t buffer_size) : port_(port), buffer_size_(b
 
 UdpSocket::~UdpSocket() {
     delete[] buffer_;
-    close(sockfd_);
+  close(sockfd_);
 }
 
-void UdpSocket::SendTo(const std::string& ip, int port, const std::vector<byte>& message) {
+void UdpSocket::send(const std::vector<byte> &message)
+{
+  for(size_t i = 0; i < params_.dst_hosts.size() ; i++){
+    sendTo(params_.dst_hosts[i],
+           params_.dst_ports[i],
+           message);
+  }
+}
+
+void UdpSocket::sendTo(const std::string& ip, int port, const std::vector<byte>& message) {
     struct sockaddr_in dest_addr;
     memset(&dest_addr, 0, sizeof(dest_addr));
     dest_addr.sin_family = AF_INET;
@@ -50,7 +62,7 @@ void UdpSocket::SendTo(const std::string& ip, int port, const std::vector<byte>&
     sendto(sockfd_, message.data(), message.size(), 0, reinterpret_cast<struct sockaddr*>(&dest_addr), sizeof(dest_addr));
 }
 
-void UdpSocket::Receive() {
+void UdpSocket::spinOnce() {
     struct sockaddr_in sender_addr;
     socklen_t sender_len = sizeof(sender_addr);
 
@@ -70,7 +82,7 @@ void UdpSocket::Receive() {
 
 }
 
-void UdpSocket::AddCallback(const MessageCallback& callback) {
+void UdpSocket::addCallback(const MessageCallback& callback) {
     callbacks_.push_back(callback);
 }
 

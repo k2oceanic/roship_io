@@ -11,8 +11,9 @@ using MessageCallback = std::function<void(const std::vector<byte>&)>;
 
 class TransportInterface {
  public:
-  virtual void Receive() = 0;
-  virtual void AddCallback(const MessageCallback& callback) = 0;
+  virtual void send(const std::vector<byte>&) = 0;
+  virtual void spinOnce() = 0;
+  virtual void addCallback(const MessageCallback& callback) = 0;
 };
 
 TRANSPORT_NS_FOOT

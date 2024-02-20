@@ -21,15 +21,22 @@ TRANSPORT_NS_HEAD
 
 class UdpSocket : public TransportInterface {
  public:
-  UdpSocket(int port, size_t buffer_size = 1024);
+  struct Params{
+    std::vector<std::string> dst_hosts;
+    std::vector<long int>         dst_ports;
+    int buffer_size;
+    int port;
+  };
+  UdpSocket(Params params);
   ~UdpSocket();
-  void SendTo(const std::string& ip, int port, const std::vector<byte>& message);
-  void Receive();
-  void AddCallback(const MessageCallback& callback);
+  void send(const std::vector<byte>& message);
+  void sendTo(const std::string& ip, int port, const std::vector<byte>& message);
+  void spinOnce();
+  void addCallback(const MessageCallback& callback);
 
  private:
+  Params params_;
   int sockfd_;
-  int port_;
   size_t buffer_size_;
   struct sockaddr_in addr_;
   std::vector<MessageCallback> callbacks_;

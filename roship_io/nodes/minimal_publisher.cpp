@@ -17,7 +17,7 @@ class MinimalPublisher : public rclcpp::Node
     MinimalPublisher()
     : Node("minimal_publisher"), count_(0)
     {
-      publisher_ = this->create_publisher<io_interfaces::msg::RawPacket>("udp_connection/to_device", 10);
+      publisher_ = this->create_publisher<io_interfaces::msg::RawPacket>("serial_connection/to_device", 10);
       timer_ = this->create_wall_timer(
       500ms, std::bind(&MinimalPublisher::timer_callback, this));
     }
@@ -26,7 +26,7 @@ class MinimalPublisher : public rclcpp::Node
     void timer_callback()
     {
       auto message = io_interfaces::msg::RawPacket();
-      std::vector<unsigned char> data = {'H','e','l','l','o'};
+      std::vector<unsigned char> data = {'H','e','l','l','o','\n','\r'};
       message.data = data;
       RCLCPP_INFO(this->get_logger(), "Publishing");
       publisher_->publish(message);
