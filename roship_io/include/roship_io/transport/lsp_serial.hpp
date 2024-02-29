@@ -22,8 +22,11 @@ public:
         int buffer_size = 1024;
         int character_size = 8;
         int stop_bits = 1;
-        int read_timeout_ms = 100;
-        byte end_of_line_char = 0xAA;
+        int read_timeout_ms = 50;
+        byte end_of_frame_byte = 0xAA;
+        std::string end_of_frame_ascii = "\n";
+        bool use_end_of_frame_byte = false;
+        bool use_end_of_frame_ascii = false;
     };
 
     LspSerial(Params params);

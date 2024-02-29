@@ -17,7 +17,10 @@ void SerialConnection::Params::declare(rclcpp::Node::SharedPtr node)
   node->declare_parameter("serial.character_size", serial.character_size);
   node->declare_parameter("serial.stop_bits", serial.stop_bits);
   node->declare_parameter("serial.read_timeout_ms", serial.read_timeout_ms);
-  node->declare_parameter("serial.end_of_line_char", serial.end_of_line_char);
+  node->declare_parameter("serial.end_of_frame_byte", serial.end_of_frame_byte);
+  node->declare_parameter("serial.end_of_frame_ascii", serial.end_of_frame_ascii);
+  node->declare_parameter("serial.use_end_of_frame_byte", serial.use_end_of_frame_byte);
+  node->declare_parameter("serial.use_end_of_frame_ascii", serial.use_end_of_frame_ascii);
 }
 
 void SerialConnection::Params::update(rclcpp::Node::SharedPtr node)
@@ -28,7 +31,10 @@ void SerialConnection::Params::update(rclcpp::Node::SharedPtr node)
   node->get_parameter("serial.character_size", serial.character_size);
   node->get_parameter("serial.stop_bits", serial.stop_bits);
   node->get_parameter("serial.read_timeout_ms", serial.read_timeout_ms);
-  node->get_parameter("serial.end_of_line_char", serial.end_of_line_char);
+  node->get_parameter("serial.end_of_frame_byte", serial.end_of_frame_byte);
+  node->get_parameter("serial.end_of_frame_ascii", serial.end_of_frame_ascii);
+  node->get_parameter("serial.use_end_of_frame_byte", serial.use_end_of_frame_byte);
+  node->get_parameter("serial.use_end_of_frame_ascii", serial.use_end_of_frame_ascii);
 }
 
 SerialConnection::SerialConnection(rclcpp::Node::SharedPtr node):
