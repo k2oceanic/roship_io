@@ -40,25 +40,34 @@ void LspSerial::stopReadThread() {
 }
 
 void LspSerial::readLoop() {
+    std::vector<byte> message;
+
     while (continue_reading_) {
         int bytes_read = sp_nonblocking_read(serial_port_, read_buffer_.data(), read_buffer_.size());
         if (bytes_read > 0) {
-            std::vector<byte> message(read_buffer_.begin(), read_buffer_.begin() + bytes_read);
-            if (message_callback_) {
-                message_callback_(message);
+            // Append the read bytes to the message buffer
+            message.insert(message.end(), read_buffer_.begin(), read_buffer_.begin() + bytes_read);
+
+            // Check for end-of-line character
+            auto eol_iter = std::find(message.begin(), message.end(), params_.end_of_line_char);
+            if (eol_iter != message.end()) {
+                // Found end-of-line character, extract the message up to this point
+                std::vector<byte> complete_message(message.begin(), eol_iter + 1);
+                if (message_callback_) {
+                    message_callback_(complete_message);
+                }
+
+                // Remove the processed part of the message, including the end-of-line character
+                message.erase(message.begin(), eol_iter + 1);
             }
         }
+
         std::this_thread::sleep_for(std::chrono::milliseconds(10)); // Adjust as needed
     }
 }
 
 void LspSerial::spinOnce() {
-    if (!read_buffer_.empty()) {
-        if (message_callback_) {
-            message_callback_(read_buffer_);
-            read_buffer_.clear();
-        }
-    }
+    // do nothing
 }
 
 TRANSPORT_NS_FOOT

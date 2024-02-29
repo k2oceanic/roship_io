@@ -16,6 +16,8 @@ void SerialConnection::Params::declare(rclcpp::Node::SharedPtr node)
   node->declare_parameter("serial.buffer_size", serial.buffer_size);
   node->declare_parameter("serial.character_size", serial.character_size);
   node->declare_parameter("serial.stop_bits", serial.stop_bits);
+  node->declare_parameter("serial.read_timeout_ms", serial.read_timeout_ms);
+  node->declare_parameter("serial.end_of_line_char", serial.end_of_line_char);
 }
 
 void SerialConnection::Params::update(rclcpp::Node::SharedPtr node)
@@ -25,6 +27,8 @@ void SerialConnection::Params::update(rclcpp::Node::SharedPtr node)
   node->get_parameter("serial.buffer_size", serial.buffer_size);
   node->get_parameter("serial.character_size", serial.character_size);
   node->get_parameter("serial.stop_bits", serial.stop_bits);
+  node->get_parameter("serial.read_timeout_ms", serial.read_timeout_ms);
+  node->get_parameter("serial.end_of_line_char", serial.end_of_line_char);
 }
 
 SerialConnection::SerialConnection(rclcpp::Node::SharedPtr node):
@@ -33,7 +37,7 @@ SerialConnection::SerialConnection(rclcpp::Node::SharedPtr node):
   params_.declare(node_ptr_);
   params_.update(node_ptr_);
 
-  RCLCPP_DEBUG(node_ptr_->get_logger(),
+  RCLCPP_INFO(node_ptr_->get_logger(),
               "SerialConnection::SerialConnection - Serial port: %s, Baud rate: %d, Buffer size: %d, Character size: %d, Stop bits: %d",
               params_.serial.port.c_str(),
               params_.serial.baud_rate,
@@ -68,22 +72,22 @@ void SerialConnection::serialCallback(const std::vector<byte> &datagram)
   msg->header.stamp = rx_time;
   msg->data = datagram;
   raw_pub_->publish(*msg);
-  RCLCPP_DEBUG(node_ptr_->get_logger(),
+  RCLCPP_INFO(node_ptr_->get_logger(),
                "SerialConnection::serialCallback - Received data of size: %zu", datagram.size());
 }
 
 void SerialConnection::sendToDevice(const io_interfaces::msg::RawPacket msg)
 {
   serial_ptr_->send(msg.data);
-  RCLCPP_DEBUG(node_ptr_->get_logger(),
+  RCLCPP_INFO(node_ptr_->get_logger(),
                "SerialConnection::sendToDevice - Sent data of size: %zu", msg.data.size());
 }
 
 void SerialConnection::spin_once()
 {
-  serial_ptr_->spinOnce();
-  RCLCPP_DEBUG(node_ptr_->get_logger(),
-               "SerialConnection::spin_once - Called spinOnce");
+  //serial_ptr_->spinOnce();
+  //RCLCPP_INFO(node_ptr_->get_logger(),
+  //             "SerialConnection::spin_once - Called spinOnce");
 }
 
 CONNECTION_NS_FOOT

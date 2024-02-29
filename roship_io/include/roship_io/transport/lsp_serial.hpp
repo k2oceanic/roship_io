@@ -17,11 +17,13 @@ public:
     using MessageCallback = std::function<void(const std::vector<byte>&)>;
 
     struct Params {
-        std::string port = "/dev/ttyUSB1";
-        int baud_rate = 9600;
-        int buffer_size = 256;
+        std::string port = "/dev/ttyUSB0";
+        int baud_rate = 38400;
+        int buffer_size = 1024;
         int character_size = 8;
         int stop_bits = 1;
+        int read_timeout_ms = 100;
+        byte end_of_line_char = 0xAA;
     };
 
     LspSerial(Params params);
