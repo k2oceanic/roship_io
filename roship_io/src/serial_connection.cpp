@@ -33,9 +33,17 @@ SerialConnection::SerialConnection(rclcpp::Node::SharedPtr node):
   params_.declare(node_ptr_);
   params_.update(node_ptr_);
 
-  //serial_ptr_.reset(
-  //      new transport::LspSerial(params_.serial)
-  //      );
+  RCLCPP_DEBUG(node_ptr_->get_logger(),
+              "SerialConnection::SerialConnection - Serial port: %s, Baud rate: %d, Buffer size: %d, Character size: %d, Stop bits: %d",
+              params_.serial.port.c_str(),
+              params_.serial.baud_rate,
+              params_.serial.buffer_size,
+              params_.serial.character_size,
+              params_.serial.stop_bits);
+
+  serial_ptr_.reset(
+        new transport::LspSerial(params_.serial)
+        );
   serial_ptr_->addCallback(std::bind(&SerialConnection::serialCallback,
                                    this , std::placeholders::_1));
 
@@ -60,16 +68,22 @@ void SerialConnection::serialCallback(const std::vector<byte> &datagram)
   msg->header.stamp = rx_time;
   msg->data = datagram;
   raw_pub_->publish(*msg);
+  RCLCPP_DEBUG(node_ptr_->get_logger(),
+               "SerialConnection::serialCallback - Received data of size: %zu", datagram.size());
 }
 
 void SerialConnection::sendToDevice(const io_interfaces::msg::RawPacket msg)
 {
   serial_ptr_->send(msg.data);
+  RCLCPP_DEBUG(node_ptr_->get_logger(),
+               "SerialConnection::sendToDevice - Sent data of size: %zu", msg.data.size());
 }
 
 void SerialConnection::spin_once()
 {
   serial_ptr_->spinOnce();
+  RCLCPP_DEBUG(node_ptr_->get_logger(),
+               "SerialConnection::spin_once - Called spinOnce");
 }
 
 CONNECTION_NS_FOOT

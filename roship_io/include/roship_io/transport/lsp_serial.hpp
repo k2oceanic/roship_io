@@ -17,7 +17,7 @@ public:
     using MessageCallback = std::function<void(const std::vector<byte>&)>;
 
     struct Params {
-        std::string port = "/dev/ttyUSB0";
+        std::string port = "/dev/ttyUSB1";
         int baud_rate = 9600;
         int buffer_size = 256;
         int character_size = 8;
