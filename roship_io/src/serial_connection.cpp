@@ -15,6 +15,7 @@ void SerialConnection::Params::declare(rclcpp::Node::SharedPtr node)
   node->declare_parameter("serial.baud_rate", serial.baud_rate);
   node->declare_parameter("serial.buffer_size", serial.buffer_size);
   node->declare_parameter("serial.character_size", serial.character_size);
+  node->declare_parameter("serial.stop_bits", serial.stop_bits);
 }
 
 void SerialConnection::Params::update(rclcpp::Node::SharedPtr node)
@@ -23,17 +24,18 @@ void SerialConnection::Params::update(rclcpp::Node::SharedPtr node)
   node->get_parameter("serial.baud_rate", serial.baud_rate);
   node->get_parameter("serial.buffer_size", serial.buffer_size);
   node->get_parameter("serial.character_size", serial.character_size);
+  node->get_parameter("serial.stop_bits", serial.stop_bits);
 }
 
 SerialConnection::SerialConnection(rclcpp::Node::SharedPtr node):
-  IoConnection<transport::AsioSerial>(node)
+  IoConnection<transport::LspSerial>(node)
 {
   params_.declare(node_ptr_);
   params_.update(node_ptr_);
 
-  serial_ptr_.reset(
-        new transport::AsioSerial(params_.serial)
-        );
+  //serial_ptr_.reset(
+  //      new transport::LspSerial(params_.serial)
+  //      );
   serial_ptr_->addCallback(std::bind(&SerialConnection::serialCallback,
                                    this , std::placeholders::_1));
 
@@ -49,7 +51,6 @@ SerialConnection::SerialConnection(rclcpp::Node::SharedPtr node):
               "connecting to port %s with buffer size %i", params_.serial.port.c_str(),params_.serial.buffer_size);
   RCLCPP_INFO(node_ptr_->get_logger(),
               "sending message to device from topic: %s", raw_sub_->get_topic_name());
-
 }
 
 void SerialConnection::serialCallback(const std::vector<byte> &datagram)

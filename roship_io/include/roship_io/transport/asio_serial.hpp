@@ -21,6 +21,8 @@ public:
   AsioSerial(Params params);
   ~AsioSerial();
 
+  // TransportInterface
+
   void send(const std::vector<byte>& message) override;
   void spinOnce() override;
   void addCallback(const MessageCallback& callback) override;
