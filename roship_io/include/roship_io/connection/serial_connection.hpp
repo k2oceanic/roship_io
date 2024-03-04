@@ -9,9 +9,21 @@
 
 CONNECTION_NS_HEAD
 
+/**
+ * @class SerialConnection
+ * @brief A class for serial communication in a ROS2 context.
+ *
+ * This class handles serial communication within a ROS2 node, using the LspSerial class for the actual
+ * serial communication. It subscribes to messages to be sent to the device and publishes messages received
+ * from the device.
+ */
 class SerialConnection : public IoConnection<transport::LspSerial>
 {
 public:
+  /**
+   * @struct Params
+   * @brief Configuration parameters for the SerialConnection.
+   */
   struct Params
   {
     Params();
@@ -20,6 +32,10 @@ public:
     transport::LspSerial::Params serial;
   };
 
+  /**
+   * @brief Constructor for SerialConnection.
+   * @param node Shared pointer to the ROS2 node.
+   */
   SerialConnection(rclcpp::Node::SharedPtr node);
 
   void serialCallback(const std::vector<byte>& datagram);
