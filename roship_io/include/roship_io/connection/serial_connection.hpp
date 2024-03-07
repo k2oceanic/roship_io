@@ -38,8 +38,21 @@ public:
    */
   SerialConnection(rclcpp::Node::SharedPtr node);
 
+  /**
+   * @brief Callback function for handling received serial data.
+   * @param datagram The received data as a vector of bytes.
+   */
   void serialCallback(const std::vector<byte>& datagram);
+
+  /**
+   * @brief Sends data to the connected serial device.
+   * @param msg The message containing the data to be sent.
+   */
   void sendToDevice(const io_interfaces::msg::RawPacket msg);
+  
+  /**
+   * @brief Performs a single iteration of the ROS 2 spin loop.
+   */
   void spin_once();
 
 

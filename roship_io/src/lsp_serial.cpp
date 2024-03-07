@@ -87,7 +87,7 @@ void LspSerial::readLoop() {
 }
 
 void LspSerial::spinOnce() {
-    // do nothing
+    // Right now does nothing, might replace while loop functionality of read loop moving forward
 }
 
 TRANSPORT_NS_FOOT

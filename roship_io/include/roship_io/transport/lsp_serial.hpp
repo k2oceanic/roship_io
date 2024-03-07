@@ -38,7 +38,7 @@ public:
         int read_timeout_ms = 50;          ///< Timeout for reading in milliseconds.
         byte end_of_frame_byte = 0xAA;     ///< Byte indicating the end of a frame.
         std::string end_of_frame_ascii = "\n"; ///< ASCII string indicating the end of a frame.
-        bool use_end_of_frame_byte = false; ///< Flag to use end_of_frame_byte for frame detection.
+        bool use_end_of_frame_byte = true; ///< Flag to use end_of_frame_byte for frame detection.
         bool use_end_of_frame_ascii = false; ///< Flag to use end_of_frame_ascii for frame detection.
     };
 
