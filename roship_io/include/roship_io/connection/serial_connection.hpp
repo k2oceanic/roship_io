@@ -1,38 +1,64 @@
-#pragma once  // Favor using this over the #ifndef, #define method
+#pragma once  
 
-
-// First include your local package stuff
-#include "connection_defs.hpp"  //  This is where we include all our namespace stuff for the package
+#include "connection_defs.hpp" 
 #include <rclcpp/rclcpp.hpp>
 #include "io_connection.hpp"
-#include "transport/asio_serial.hpp"
+#include "transport/lsp_serial.hpp"
 
 #include <io_interfaces/msg/raw_packet.hpp>
 
-
 CONNECTION_NS_HEAD
 
-class SerialConnection : public IoConnection<transport::AsioSerial>
+/**
+ * @class SerialConnection
+ * @brief A class for serial communication in a ROS2 context.
+ *
+ * This class handles serial communication within a ROS2 node, using the LspSerial class for the actual
+ * serial communication. It subscribes to messages to be sent to the device and publishes messages received
+ * from the device.
+ */
+class SerialConnection : public IoConnection<transport::LspSerial>
 {
 public:
+  /**
+   * @struct Params
+   * @brief Configuration parameters for the SerialConnection.
+   */
   struct Params
   {
     Params();
     void declare(rclcpp::Node::SharedPtr node);
     void update(rclcpp::Node::SharedPtr node);
-    transport::AsioSerial::Params serial;
+    transport::LspSerial::Params serial;
   };
 
+  /**
+   * @brief Constructor for SerialConnection.
+   * @param node Shared pointer to the ROS2 node.
+   */
   SerialConnection(rclcpp::Node::SharedPtr node);
 
+  /**
+   * @brief Callback function for handling received serial data.
+   * @param datagram The received data as a vector of bytes.
+   */
   void serialCallback(const std::vector<byte>& datagram);
+
+  /**
+   * @brief Sends data to the connected serial device.
+   * @param msg The message containing the data to be sent.
+   */
   void sendToDevice(const io_interfaces::msg::RawPacket msg);
+  
+  /**
+   * @brief Performs a single iteration of the ROS 2 spin loop.
+   */
   void spin_once();
 
 
 protected:
   rclcpp::TimerBase::SharedPtr          timer_;
-  std::shared_ptr<transport::AsioSerial> serial_ptr_;
+  std::shared_ptr<transport::LspSerial> serial_ptr_;
   rclcpp::Publisher<io_interfaces::msg::RawPacket>::SharedPtr raw_pub_;
   rclcpp::Subscription<io_interfaces::msg::RawPacket>::SharedPtr raw_sub_;
   Params params_;

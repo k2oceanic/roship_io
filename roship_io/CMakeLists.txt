@@ -19,11 +19,13 @@ set(EXTERNAL_DEPENDS_LIB
 
   )
 
-
 get_filename_component(PACKAGE_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 message("Creating Package: ${PACKAGE_NAME}")
 project(${PACKAGE_NAME})  ## this package name is the name of the directory this cmake file is in
 
+# Find libserialport using pkg-config
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(LIBSERIALPORT REQUIRED libserialport)
 
 add_compile_definitions(CMAKE_PACKAGE_NAME=${PACKAGE_NAME})
 
@@ -43,7 +45,6 @@ endif()
 foreach(DEPEND ${ROS_DEPENDS} ${EXTERNAL_DEPENDS})
   find_package(${DEPEND} REQUIRED)
 endforeach(DEPEND)
-
 
 ################
 ## Find files ##
@@ -78,9 +79,9 @@ foreach(NODE_FILE ${NODES})
   list(APPEND EXECUTABLES ${NODE_NAME})
   add_executable(${NODE_NAME} ${NODE_FILE} ${HDRS} ${SRCS})
   ament_target_dependencies(${NODE_NAME} ${ROS_DEPENDS} ${EXTERNAL_DEPENDS_LIB})
-  target_include_directories(${NODE_NAME} PRIVATE "include/${PROJECT_NAME}/")
+  target_include_directories(${NODE_NAME} PRIVATE "include/${PROJECT_NAME}/" ${LIBSERIALPORT_INCLUDE_DIRS})
+  target_link_libraries(${NODE_NAME} ${LIBSERIALPORT_LIBRARIES})
 endforeach(NODE_FILE)
-
 
 message("  Installing: " ${EXECUTABLES})
 install(TARGETS
