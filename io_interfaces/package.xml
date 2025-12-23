@@ -2,9 +2,9 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>io_interfaces</name>
-  <version>0.1.0</version>
-  <description>template_pkg interface definitions</description>
-  <maintainer email="kris@todo.com">Kristopher kkrasnosky</maintainer>
+  <version>1.0.0</version>
+  <description>RoShip io interface definitions</description>
+  <maintainer email="support@seaward.science">Kristopher Krasnosky</maintainer>
   <license>Apache 2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
