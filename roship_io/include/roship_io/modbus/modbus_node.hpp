@@ -32,7 +32,7 @@ public:
       std::string type = "tcp";
       std::string ip   = "192.168.52.209";
       int network_port = 502;
-      int response_timout_ms = 500;
+      int response_timeout_ms = 500;
       int slave_id = 1;
     }connection;
 

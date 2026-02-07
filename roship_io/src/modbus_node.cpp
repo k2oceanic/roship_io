@@ -73,7 +73,8 @@ void ModbusNode::connect()
     connected_ = true;
     RCLCPP_INFO(this->get_logger(),"Connected!");
 
-    //modbus_.set_response_timout(1,params_.connection.response_timout_ms*1000);
+    // Set response timeout (convert ms to microseconds)
+    modbus_.set_response_timeout(0, params_.connection.response_timeout_ms * 1000);
     RCLCPP_INFO(this->get_logger(),"Setting Slave ID: %i", params_.connection.slave_id);
 
     modbus_.set_slave(params_.connection.slave_id);
@@ -103,6 +104,8 @@ void ModbusNode::Params::declare(rclcpp::Node *node)
   node->declare_parameter("connection.type", connection.type);
   node->declare_parameter("connection.ip", connection.ip);
   node->declare_parameter("connection.network_port", connection.network_port);
+  node->declare_parameter("connection.response_timeout_ms", connection.response_timeout_ms);
+  node->declare_parameter("connection.slave_id", connection.slave_id);
 }
 
 void ModbusNode::Params::update(rclcpp::Node *node)
@@ -116,6 +119,8 @@ void ModbusNode::Params::update(rclcpp::Node *node)
   node->get_parameter("connection.type", connection.type);
   node->get_parameter("connection.ip", connection.ip);
   node->get_parameter("connection.network_port", connection.network_port);
+  node->get_parameter("connection.response_timeout_ms", connection.response_timeout_ms);
+  node->get_parameter("connection.slave_id", connection.slave_id);
 }
 
 MODBUS_NS_FOOT

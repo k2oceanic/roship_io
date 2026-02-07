@@ -27,7 +27,7 @@ public:
   void write_registers(int addr, int nb, const uint16_t *src);
   void write_registers(Block & block);
   void print_buffer();
-  void set_response_timout(uint32_t to_sec, uint32_t to_usec);
+  void set_response_timeout(uint32_t to_sec, uint32_t to_usec);
   uint16_t * buffer();
 
   static const int REGISTER_MAX_WORDS = 128;

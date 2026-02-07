@@ -82,7 +82,7 @@ void Modbus::print_buffer(){
   std::cout << std::endl;
 }
 
-void Modbus::set_response_timout(uint32_t to_sec, uint32_t to_usec)
+void Modbus::set_response_timeout(uint32_t to_sec, uint32_t to_usec)
 {
   if ( modbus_set_response_timeout(mb_, to_sec, to_usec) == -1){
     throw std::runtime_error("Failed to set timeout: " + std::string(modbus_strerror(errno)));
