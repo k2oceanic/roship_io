@@ -1,0 +1,7 @@
+/**:
+  serial_connection:
+    ros__parameters:
+      serial:
+        baud_rate: 38400
+        port: "/dev/ttyUSB0"
+

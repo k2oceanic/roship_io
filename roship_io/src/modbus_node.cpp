@@ -68,7 +68,7 @@ void ModbusNode::connect()
       RCLCPP_ERROR(this->get_logger(),"Invalid connection type specified %s",params_.connection.type.c_str());
       return;
     }
-    RCLCPP_INFO(this->get_logger(),"Connectd to device");
+    RCLCPP_INFO(this->get_logger(),"Connected to device");
     connect_timer_->reset();
     connected_ = true;
     RCLCPP_INFO(this->get_logger(),"Connected!");

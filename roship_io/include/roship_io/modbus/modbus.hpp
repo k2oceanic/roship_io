@@ -11,7 +11,6 @@
 #include <iostream>
 #include <memory>
 
-
 MODBUS_NS_HEAD
 
 class Modbus{
