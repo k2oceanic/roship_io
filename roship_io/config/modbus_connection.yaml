@@ -1,0 +1,12 @@
+/**:
+  ros__parameters:
+    timers:
+      poll_ms: 500
+      connect_ms: 1000
+      write_ms: 10
+    connection:
+      type: "tcp"
+      ip: "192.168.1.1"
+      network_port: 502
+      response_timeout_ms: 500
+      slave_id: 1
