@@ -110,7 +110,7 @@ Add usage notes and expected outputs in README.
 
 1. **Serial framing off-by-one for ASCII delimiter**
    - In `LspSerial::readLoop`, when ASCII delimiter is found, iterator is advanced by delimiter length and then `eof_iter + 1` is used for message slicing. This can include one extra byte or overrun logical boundary.
-2. **Serial connection timer does not poll transport**
+2. **Serial connection timer does not poll transport** THIS IS FINE, but should be noted as a design choice that relies on background thread for transport updates. If the transport layer (e.g., serial port) has internal state that needs regular polling, this could lead to dead/inconsistent behavior since `spin_once()` is effectively a no-op.
    - `SerialConnection::spin_once()` has the call to `serial_ptr_->spinOnce()` commented out; behavior depends entirely on background thread, making timer path dead/inconsistent.
 3. **MQTT global init/cleanup lifecycle risk**
    - `mosquitto_lib_cleanup()` is called in destructor whenever a client is destroyed, which can break multi-instance lifecycle if more than one client exists.

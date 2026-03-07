@@ -1,3 +1,5 @@
+/** Copyright © 2025 Seaward Science. */
+
 #include "transport/udp_socket.hpp"
 
 TRANSPORT_NS_HEAD
@@ -59,14 +61,17 @@ void UdpSocket::sendTo(const std::string& ip, int port, const std::vector<byte>&
         throw std::runtime_error("Invalid address/ Address not supported");
     }
 
-    sendto(sockfd_, message.data(), message.size(), 0, reinterpret_cast<struct sockaddr*>(&dest_addr), sizeof(dest_addr));
+    sendto(
+        sockfd_, message.data(), message.size(), 0,
+        reinterpret_cast<struct sockaddr*>(&dest_addr), sizeof(dest_addr));
 }
 
 void UdpSocket::spinOnce() {
     struct sockaddr_in sender_addr;
     socklen_t sender_len = sizeof(sender_addr);
 
-    ssize_t n = recvfrom(sockfd_, buffer_, buffer_size_, 0, reinterpret_cast<struct sockaddr*>(&sender_addr), &sender_len);
+    ssize_t n = recvfrom(
+        sockfd_, buffer_, buffer_size_, 0, reinterpret_cast<struct sockaddr*>(&sender_addr), &sender_len);
 
     if (n > 0) {
         std::vector<byte> message(buffer_, buffer_ + n);
@@ -78,8 +83,6 @@ void UdpSocket::spinOnce() {
             throw std::runtime_error("Error receiving data: " + std::string(strerror(errno)));
         }
     }
-
-
 }
 
 void UdpSocket::addCallback(const MessageCallback& callback) {

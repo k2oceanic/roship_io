@@ -1,3 +1,5 @@
+/** Copyright © 2025 Seaward Science. */
+
 #include "connection/serial_connection.hpp"
 
 CONNECTION_NS_HEAD
@@ -44,7 +46,8 @@ SerialConnection::SerialConnection(rclcpp::Node::SharedPtr node):
   params_.update(node_ptr_);
 
   RCLCPP_INFO(node_ptr_->get_logger(),
-              "SerialConnection::SerialConnection - Serial port: %s, Baud rate: %d, Buffer size: %d, Character size: %d, Stop bits: %d",
+              "SerialConnection::SerialConnection - Serial port: %s, Baud rate: %d, Buffer size: %d, "
+              "Character size: %d, Stop bits: %d",
               params_.serial.port.c_str(),
               params_.serial.baud_rate,
               params_.serial.buffer_size,
@@ -66,7 +69,8 @@ SerialConnection::SerialConnection(rclcpp::Node::SharedPtr node):
         1ms, std::bind(&SerialConnection::spin_once, this));
 
   RCLCPP_INFO(node_ptr_->get_logger(),
-              "connecting to port %s with buffer size %i", params_.serial.port.c_str(),params_.serial.buffer_size);
+              "connecting to port %s with buffer size %i",
+              params_.serial.port.c_str(), params_.serial.buffer_size);
   RCLCPP_INFO(node_ptr_->get_logger(),
               "sending messages to device from topic: %s", raw_sub_->get_topic_name());
 }

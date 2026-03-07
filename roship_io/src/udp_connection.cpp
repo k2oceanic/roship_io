@@ -1,3 +1,5 @@
+/** Copyright © 2025 Seaward Science. */
+
 #include "connection/udp_connection.hpp"
 
 CONNECTION_NS_HEAD
@@ -10,7 +12,6 @@ UdpConnection::Params::Params()
   sock.buffer_size = 1024;
   sock.dst_hosts = {"127.0.0.1" };
   sock.dst_ports = {4321        };
-
 }
 
 void UdpConnection::Params::declare(rclcpp::Node::SharedPtr node)
@@ -54,10 +55,9 @@ UdpConnection::UdpConnection(rclcpp::Node::SharedPtr node):
         1ms, std::bind(&UdpConnection::spin_once, this));
 
   RCLCPP_INFO(node_ptr_->get_logger(),
-              "Listeing on port %i with buffer size %i", params_.sock.port,params_.sock.buffer_size);
+              "Listeing on port %i with buffer size %i", params_.sock.port, params_.sock.buffer_size);
   RCLCPP_INFO(node_ptr_->get_logger(),
               "sending message to device from topic: %s", raw_sub_->get_topic_name());
-
 }
 
 void UdpConnection::udpCallback(const std::vector<byte> &datagram)

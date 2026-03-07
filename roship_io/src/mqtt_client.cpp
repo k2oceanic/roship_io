@@ -1,3 +1,5 @@
+/** Copyright © 2025 Seaward Science. */
+
 #include "transport/mqtt_client.hpp"
 
 static bool mosquitto_initialized = false;
@@ -5,7 +7,6 @@ static bool mosquitto_initialized = false;
 TRANSPORT_NS_HEAD
 
 MqttClient::MqttClient(const Params& params) : params_(params) {
-
     if (!mosquitto_initialized) {
         mosquitto_lib_init();
         mosquitto_initialized = true;
@@ -38,7 +39,8 @@ MqttClient::~MqttClient() {
 
 void MqttClient::send(const std::vector<byte>& message) {
     if (!params_.topics.empty()) {
-        int ret = mosquitto_publish(mosq_, nullptr, params_.topics[0].c_str(), message.size(), message.data(), 0, false);
+        int ret = mosquitto_publish(
+            mosq_, nullptr, params_.topics[0].c_str(), message.size(), message.data(), 0, false);
         if (ret != MOSQ_ERR_SUCCESS) {
             throw std::runtime_error("Failed to publish message: " + std::string(mosquitto_strerror(ret)));
         }
@@ -79,7 +81,9 @@ void MqttClient::on_connect(struct mosquitto* mosq, void* userdata, int result) 
 void MqttClient::on_message(struct mosquitto* mosq, void* userdata, const struct mosquitto_message* message) {
     MqttClient* client = static_cast<MqttClient*>(userdata);
     if (client) {
-        std::vector<byte> payload(static_cast<byte*>(message->payload), static_cast<byte*>(message->payload) + message->payloadlen);
+        std::vector<byte> payload(
+            static_cast<byte*>(message->payload),
+            static_cast<byte*>(message->payload) + message->payloadlen);
         std::string topic(message->topic);
         for (const auto& callback : client->mqtt_callbacks_) {
             callback(payload, topic);
