@@ -88,7 +88,7 @@ void ModbusNode::connect()
     connected_ = false;
     std::string error_msg = err.what();
     RCLCPP_WARN_ONCE(
-        this->get_logger(), "Unable to connect, will continue trying. Got Error\n ---%s",
+        this->get_logger(), "Unable to connect, will continue trying. Got error\n ---%s",
         error_msg.c_str());
   }
 }

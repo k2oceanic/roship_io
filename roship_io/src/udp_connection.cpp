@@ -55,9 +55,9 @@ UdpConnection::UdpConnection(rclcpp::Node::SharedPtr node):
         1ms, std::bind(&UdpConnection::spin_once, this));
 
   RCLCPP_INFO(node_ptr_->get_logger(),
-              "Listeing on port %i with buffer size %i", params_.sock.port, params_.sock.buffer_size);
+              "Listening on port %i with buffer size %i", params_.sock.port, params_.sock.buffer_size);
   RCLCPP_INFO(node_ptr_->get_logger(),
-              "sending message to device from topic: %s", raw_sub_->get_topic_name());
+              "Sending messages to device from topic: %s", raw_sub_->get_topic_name());
 }
 
 void UdpConnection::udpCallback(const std::vector<byte> &datagram)

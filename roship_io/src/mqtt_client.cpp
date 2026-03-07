@@ -79,6 +79,7 @@ void MqttClient::on_connect(struct mosquitto* mosq, void* userdata, int result) 
 }
 
 void MqttClient::on_message(struct mosquitto* mosq, void* userdata, const struct mosquitto_message* message) {
+    (void)mosq;
     MqttClient* client = static_cast<MqttClient*>(userdata);
     if (client) {
         std::vector<byte> payload(
@@ -92,6 +93,7 @@ void MqttClient::on_message(struct mosquitto* mosq, void* userdata, const struct
 }
 
 void MqttClient::on_disconnect(struct mosquitto* mosq, void* userdata, int reason) {
+    (void)mosq;
     MqttClient* client = static_cast<MqttClient*>(userdata);
     if (client) {
         std::cerr << "MQTT client disconnected: " << mosquitto_strerror(reason) << std::endl;

@@ -62,7 +62,7 @@ MqttConnection::MqttConnection(rclcpp::Node::SharedPtr node) :
 void MqttConnection::mqttCallback(const std::vector<byte>& message, const std::string& topic)
 {
     std::string message_str(message.begin(), message.end());
-    RCLCPP_DEBUG(node_ptr_->get_logger(), "Recieved message %s from topic %s", message_str.c_str(), topic.c_str());
+    RCLCPP_DEBUG(node_ptr_->get_logger(), "Received message %s from topic %s", message_str.c_str(), topic.c_str());
     auto ros_topic = "~/from_device/" + topic;
     auto it = ros_publishers_.find(ros_topic);
     if (it != ros_publishers_.end()) {
