@@ -1,11 +1,10 @@
 #pragma once  
 
 #include "connection_defs.hpp" 
-#include <rclcpp/rclcpp.hpp>
 #include "io_connection.hpp"
 #include "transport/lsp_serial.hpp"
-
 #include <io_interfaces/msg/raw_packet.hpp>
+#include <rclcpp/rclcpp.hpp>
 
 CONNECTION_NS_HEAD
 
