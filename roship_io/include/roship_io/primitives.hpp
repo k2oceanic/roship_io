@@ -5,30 +5,31 @@
 #include <cstdint>
 #include <cstddef>
 
-
 ROSHIP_IO_NS_HEAD
 
-
-
+/**
+ * @brief Fundamental type aliases and byte-order utilities used throughout roship_io.
+ */
 namespace primitives {
 
-using   byte =      uint8_t;  //!<  this covers the ROSmessage definition of a byte
-using   word =      uint16_t;
+using byte = uint8_t;   ///< Byte type, compatible with the `io_interfaces::msg::RawPacket` `data` field.
+using word = uint16_t;  ///< 16-bit word type, used as the Modbus register unit.
 
-typedef uint8_t     u8;
-typedef uint16_t    u16;
-typedef uint32_t    u32;
-typedef int8_t      s8;
-typedef int16_t     s16;
-typedef int32_t     s32;
-typedef float       f32;
-typedef double      f64;
+typedef uint8_t  u8;  ///< Unsigned 8-bit integer.
+typedef uint16_t u16; ///< Unsigned 16-bit integer.
+typedef uint32_t u32; ///< Unsigned 32-bit integer.
+typedef int8_t   s8;  ///< Signed 8-bit integer.
+typedef int16_t  s16; ///< Signed 16-bit integer.
+typedef int32_t  s32; ///< Signed 32-bit integer.
+typedef float    f32; ///< 32-bit IEEE 754 float.
+typedef double   f64; ///< 64-bit IEEE 754 double.
 
+/**
+ * @brief Reverse the byte order of primitive.
+ */
 template <typename T>
 T revPrimitive(const T u)
 {
-    //static_assert (CHAR_BIT == 8, "CHAR_BIT != 8");
-
     union
     {
         T u;
@@ -43,46 +44,46 @@ T revPrimitive(const T u)
     return dest.u;
 }
 
-/*!
- * \brief The BigEndianPrimative struct represents a big endian version
- * of various primitives.  Also includes overloaded casting operators
- * so it can be assigned to standard primatives with minimal extra syntax.
+/**
+ * @brief A big-endian primitive stored as a single raw value with byte-swap accessors.
+ *
  */
 template <typename PrimT>
-struct BigEndianPrimative{
-  PrimT raw;
-  /*!
-   * \brief returns the machine-endian version of the variable in
-   * the specified (PrimT) type.
-   * \return a machine endian version fo the variable
+struct BigEndianPrimative {
+  PrimT raw; ///< Raw big-endian storage.
+
+  /**
+   * @brief Return the machine-endian value.
+   * @return Native (host) endian value.
    */
-  PrimT get() const{
-    return revPrimitive(raw);
-  }
-  void set(PrimT val){
-    raw = revPrimitive(val);
-  }
+  PrimT get() const { return revPrimitive(raw); }
 
-  operator int8_t() const { return get(); }
-  operator int16_t() const { return get(); }
-  operator int32_t() const { return get(); }
+  /**
+   * @brief Store a machine-endian value in big-endian byte order.
+   * @param val Native value to store.
+   */
+  void set(PrimT val) { raw = revPrimitive(val); }
 
-  operator uint8_t() const { return get(); }
-  operator uint16_t() const { return get(); }
-  operator uint32_t() const { return get(); }
+  operator int8_t()   const { return get(); } ///< Implicit cast to int8_t.
+  operator int16_t()  const { return get(); } ///< Implicit cast to int16_t.
+  operator int32_t()  const { return get(); } ///< Implicit cast to int32_t.
 
-  operator float() const {return get(); }
-  operator double() const {return get(); }
+  operator uint8_t()  const { return get(); } ///< Implicit cast to uint8_t.
+  operator uint16_t() const { return get(); } ///< Implicit cast to uint16_t.
+  operator uint32_t() const { return get(); } ///< Implicit cast to uint32_t.
+
+  operator float()  const { return get(); }   ///< Implicit cast to float.
+  operator double() const { return get(); }   ///< Implicit cast to double.
 };
 
-typedef BigEndianPrimative<u8>      BE_u8;
-typedef BigEndianPrimative<u16>     BE_u16;
-typedef BigEndianPrimative<u32>     BE_u32;
-typedef BigEndianPrimative<s8>      BE_s8;
-typedef BigEndianPrimative<s16>     BE_s16;
-typedef BigEndianPrimative<s32>     BE_s32;
-typedef BigEndianPrimative<f32>     BE_f32;
-typedef BigEndianPrimative<f64>     BE_f64;
+typedef BigEndianPrimative<u8>  BE_u8;  ///< Big-endian unsigned 8-bit integer.
+typedef BigEndianPrimative<u16> BE_u16; ///< Big-endian unsigned 16-bit integer.
+typedef BigEndianPrimative<u32> BE_u32; ///< Big-endian unsigned 32-bit integer.
+typedef BigEndianPrimative<s8>  BE_s8;  ///< Big-endian signed 8-bit integer.
+typedef BigEndianPrimative<s16> BE_s16; ///< Big-endian signed 16-bit integer.
+typedef BigEndianPrimative<s32> BE_s32; ///< Big-endian signed 32-bit integer.
+typedef BigEndianPrimative<f32> BE_f32; ///< Big-endian 32-bit float.
+typedef BigEndianPrimative<f64> BE_f64; ///< Big-endian 64-bit double.
 
 }
 using namespace primitives;

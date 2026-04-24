@@ -1,3 +1,5 @@
+/** Copyright © 2025 Seaward Science. */
+
 #include "transport/lsp_serial.hpp"
 
 TRANSPORT_NS_HEAD
@@ -49,26 +51,30 @@ void LspSerial::readLoop() {
 
         if (bytes_read > 0) {
             message.insert(message.end(), read_buffer_.begin(), read_buffer_.begin() + bytes_read);
-            last_byte_time = std::chrono::steady_clock::now(); // Update the time of the last received byte
+            last_byte_time = std::chrono::steady_clock::now();  // Update the time of the last received byte
 
             // Check for end-of-frame byte or ASCII delimiter
             bool message_end_found = false;
-            std::vector<byte>::iterator eof_iter;
+            std::vector<byte>::iterator frame_end_iter = message.end();
             if (params_.use_end_of_frame_byte) {
-                eof_iter = std::find(message.begin(), message.end(), params_.end_of_frame_byte);
+                auto eof_iter = std::find(message.begin(), message.end(), params_.end_of_frame_byte);
                 if (eof_iter != message.end()) {
                     message_end_found = true;
+                    frame_end_iter = eof_iter + 1;  // Include the end-of-frame byte.
                 }
             } else if (params_.use_end_of_frame_ascii) {
-                eof_iter = std::search(message.begin(), message.end(), params_.end_of_frame_ascii.begin(), params_.end_of_frame_ascii.end());
+                auto eof_iter = std::search(
+                    message.begin(), message.end(),
+                    params_.end_of_frame_ascii.begin(), params_.end_of_frame_ascii.end());
                 if (eof_iter != message.end()) {
                     message_end_found = true;
-                    eof_iter += params_.end_of_frame_ascii.length(); // Move iterator to the end of the ASCII delimiter
+                    frame_end_iter = eof_iter + params_.end_of_frame_ascii.length();
+                    // Include the whole ASCII delimiter.
                 }
             }
 
             if (message_end_found) {
-                std::vector<byte> complete_message(message.begin(), eof_iter + 1);
+                std::vector<byte> complete_message(message.begin(), frame_end_iter);
                 if (message_callback_) {
                     message_callback_(complete_message);
                 }
@@ -76,7 +82,9 @@ void LspSerial::readLoop() {
             }
         }
 
-        if (!message.empty() && std::chrono::steady_clock::now() - last_byte_time >= std::chrono::milliseconds(params_.read_timeout_ms)) {
+        if (!message.empty() &&
+            std::chrono::steady_clock::now() - last_byte_time >=
+            std::chrono::milliseconds(params_.read_timeout_ms)) {
             if (message_callback_) {
                 message_callback_(message);
             }
