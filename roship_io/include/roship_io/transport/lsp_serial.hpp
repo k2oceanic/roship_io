@@ -3,6 +3,7 @@
 #include "transport_interface.hpp"
 
 #include <libserialport.h>
+#include <algorithm>
 #include <vector>
 #include <functional>
 #include <thread>

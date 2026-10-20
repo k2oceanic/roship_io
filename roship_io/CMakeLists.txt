@@ -38,7 +38,7 @@ project(${PACKAGE_NAME})  ## this package name is the name of the directory this
 
 add_compile_definitions(CMAKE_PACKAGE_NAME=${PACKAGE_NAME})
 
-# Default to C++17 for humble
+# Default to C++17
 if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 17)
 endif()
@@ -53,6 +53,10 @@ endif()
 
 foreach(DEPEND ${ROS_DEPENDS} ${EXTERNAL_DEPENDS})
   find_package(${DEPEND} REQUIRED)
+endforeach(DEPEND)
+
+foreach(DEPEND ${ROS_DEPENDS})
+  list(APPEND ROS_DEPENDS_TARGETS ${${DEPEND}_TARGETS})
 endforeach(DEPEND)
 
 ################
@@ -89,7 +93,7 @@ foreach(NODE_FILE ${NODES})
   add_executable(${NODE_NAME} ${NODE_FILE} ${HDRS} ${SRCS})
   target_include_directories(${NODE_NAME} PRIVATE "include/${PROJECT_NAME}/")
   target_link_libraries(${NODE_NAME} ${EXTERNAL_DEPENDS_LIB} )
-  ament_target_dependencies(${NODE_NAME} ${ROS_DEPENDS})
+  target_link_libraries(${NODE_NAME} ${ROS_DEPENDS_TARGETS})
 endforeach(NODE_FILE)
 
 message("  Installing: " ${EXECUTABLES})
@@ -119,7 +123,7 @@ install(DIRECTORY
 include_directories(include/${PROJECT_NAME}  ${LIBMODBUS_LIBRARIES} ${LIBSERIALPORT_INCLUDE_DIRS})
 add_library(${PROJECT_NAME} ${SRCS} ${HDRS})
 ament_export_targets(${PROJECT_NAME} HAS_LIBRARY_TARGET)
-ament_target_dependencies(${PROJECT_NAME} ${ROS_DEPENDS})
+target_link_libraries(${PROJECT_NAME} ${ROS_DEPENDS_TARGETS})
 ament_export_dependencies(${ROS_DEPENDS} ${EXTERNAL_DEPENDS})
 ament_export_include_directories(include)
 

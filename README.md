@@ -17,7 +17,7 @@ sudo apt install libserialport-dev libmodbus-dev libmosquitto-dev
 Then install ROS dependencies:
 
 ```bash
-rosdep install --from-paths src --ignore-src --rosdistro humble -y
+rosdep install --from-paths src --ignore-src --rosdistro lyrical -y
 ```
 
 ---
